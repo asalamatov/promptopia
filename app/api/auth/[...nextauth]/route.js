@@ -9,7 +9,7 @@ const handler = NextAuth({
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
+    })
   ],
   callbacks: {
     async session({ session }) {
@@ -23,19 +23,21 @@ const handler = NextAuth({
     },
     async signIn({ account, profile, user, credentials }) {
       try {
-        await connectToDB();
+          await connectToDB();
+          console.log('Connected to MongoDB');
 
         // check if user already exists
         const userExists = await User.findOne({
           email: profile.email
         });
+          console.log('User exists: ', userExists);
 
         // if not, create a new document and save user in MongoDB
         if (!userExists) {
           await User.create({
             email: profile.email,
-            username: profile.name.replace(' ', '').toLowerCase(),
-            image: profile.picture,
+            username: profile.name.replace(/\s/g, '').toLowerCase(),
+            image: profile.picture
           });
         }
 
