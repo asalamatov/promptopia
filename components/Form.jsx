@@ -38,7 +38,7 @@ const Form = ({
             </span>
           </span>
           <input
-            value={post.tag}
+            value={post.tag.startsWith('#') ? '#' + post.tag.toLowerCase().replace(/[^a-z0-9]/ig, "") : '#'}
             onChange={(e) => setPost({ ...post, tag: e.target.value })}
             type='text'
             placeholder='#tag'
